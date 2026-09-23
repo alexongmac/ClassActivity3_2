@@ -18,3 +18,4 @@ resource "aws_s3_bucket" "alex_s3_buc" {
     Environment = "Dev-31"
   }
 }
+

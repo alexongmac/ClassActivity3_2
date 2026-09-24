@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "github_trust" {
       values   = ["repo:${var.github_repository_username}*/${var.github_repository_name}*:*"]
     }
   }
-}
+}s
 
 resource "aws_iam_role" "github_oidc" {
   name               = var.github_oidc_role_name
@@ -28,11 +28,6 @@ resource "aws_iam_role" "github_oidc" {
 resource "aws_iam_role_policy_attachment" "s3_full" {
   role       = aws_iam_role.github_oidc.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "iam_full" {
-  role       = aws_iam_role.github_oidc.name
-  policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
 }
 
 variable "github_repository_username" {

@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "github_trust" {
       values   = ["repo:${var.github_repository_username}*/${var.github_repository_name}*:*"]
     }
   }
-}s
+}
 
 resource "aws_iam_role" "github_oidc" {
   name               = var.github_oidc_role_name

@@ -35,6 +35,48 @@ module "github_oidc_bootstrap" {
   github_oidc_role_name      = "alex-32-github-oidc-role"
 }
 
+# AmazonS3FullAccess (attached inside the module) grants no IAM permissions,
+# but `terraform plan`/`apply` run by this same role need to read the OIDC
+# provider and the role's own attached/inline policies to detect drift.
+# This supplemental policy grants just those read-only IAM actions, scoped
+# to this role and the GitHub OIDC provider.
+resource "aws_iam_role_policy" "github_oidc_bootstrap_self_read" {
+  #checkov:skip=CKV_AWS_355:iam:ListOpenIDConnectProviders is a list-only action with no resource-level ARN to scope to; all other statements are resource-scoped.
+  name = "terraform-self-read"
+  role = "alex-32-github-oidc-role"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "OidcProviderList"
+        Effect   = "Allow"
+        Action   = "iam:ListOpenIDConnectProviders"
+        Resource = "*"
+      },
+      {
+        Sid      = "OidcProviderRead"
+        Effect   = "Allow"
+        Action   = "iam:GetOpenIDConnectProvider"
+        Resource = "arn:aws:iam::255945442255:oidc-provider/token.actions.githubusercontent.com"
+      },
+      {
+        Sid    = "GithubOidcRoleRead"
+        Effect = "Allow"
+        Action = [
+          "iam:GetRole",
+          "iam:GetRolePolicy",
+          "iam:ListRolePolicies",
+          "iam:ListAttachedRolePolicies"
+        ]
+        Resource = "arn:aws:iam::255945442255:role/alex-32-github-oidc-role"
+      }
+    ]
+  })
+
+  depends_on = [module.github_oidc_bootstrap]
+}
+
 resource "aws_s3_bucket_public_access_block" "alex_s3_buc" {
   bucket                  = aws_s3_bucket.alex_s3_buc.id
   block_public_acls       = true

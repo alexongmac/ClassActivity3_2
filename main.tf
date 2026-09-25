@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "sctp-tfstate-ce13"
-    key    = "alex-31-terraform.tfstate"
+    key    = "alex_s3/alex-32-terraform.tfstate"
     region = "us-east-1"
   }
 }
@@ -15,11 +15,11 @@ resource "aws_s3_bucket" "alex_s3_buc" {
   #checkov:skip=CKV_AWS_145:SSE-S3 default encryption is sufficient for demo
   #checkov:skip=CKV_AWS_18:Access logging not needed for class demo
   #checkov:skip=CKV2_AWS_62:Event notifications not needed for class demo
-  bucket_prefix = "alex-31-bkt"
+  bucket_prefix = "alex-32-bkt"
 
   tags = {
-    Name        = "alex-31"
-    Environment = "Dev-31"
+    Name        = "alex-32"
+    Environment = "Dev-32"
   }
 }
 

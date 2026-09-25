@@ -99,7 +99,8 @@ resource "aws_iam_role_policy" "github_oidc_s3" {
         Action = [
           "iam:GetRole",
           "iam:GetRolePolicy",
-          "iam:ListRolePolicies"
+          "iam:ListRolePolicies",
+          "iam:ListAttachedRolePolicies"
         ]
         Resource = "arn:aws:iam::*:role/alex-32-github-oidc-role"
       }

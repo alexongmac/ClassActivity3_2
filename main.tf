@@ -27,6 +27,14 @@ resource "aws_s3_bucket" "alex_s3_buc" {
   }
 }
 
+module "github_oidc_bootstrap" {
+  source = "./github-oidc-bootstrap"
+
+  github_repository_username = "alexongmac"
+  github_repository_name     = "ClassActivity3_2"
+  github_oidc_role_name      = "alex-32-github-oidc-role"
+}
+
 resource "aws_s3_bucket_public_access_block" "alex_s3_buc" {
   bucket                  = aws_s3_bucket.alex_s3_buc.id
   block_public_acls       = true

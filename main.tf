@@ -1,4 +1,8 @@
 terraform {
+  # NOTE: "sctp-tfstate-ce13" is a pre-existing, shared course-managed state
+  # bucket (provisioned out of band, not by this configuration). This backend
+  # will fail on `terraform init` in any environment where that bucket does
+  # not already exist.
   backend "s3" {
     bucket = "sctp-tfstate-ce13"
     key    = "alex_s3/alex-32-terraform.tfstate"

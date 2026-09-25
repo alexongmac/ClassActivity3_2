@@ -31,6 +31,7 @@ resource "aws_iam_role" "github_oidc" {
 }
 
 resource "aws_iam_role_policy" "github_oidc_s3" {
+  #checkov:skip=CKV_AWS_355:iam:ListOpenIDConnectProviders is a list-only action with no resource-level ARN to scope to; all other statements are resource-scoped.
   name = "s3-bucket-management"
   role = aws_iam_role.github_oidc.id
 
@@ -81,14 +82,16 @@ resource "aws_iam_role_policy" "github_oidc_s3" {
         ]
       },
       {
-        Sid    = "OidcProviderRead"
-        Effect = "Allow"
-        Action = [
-          "iam:ListOpenIDConnectProviders",
-          "iam:GetOpenIDConnectProvider"
-        ]
-        # These actions do not support resource-level restriction to a single provider.
+        Sid      = "OidcProviderList"
+        Effect   = "Allow"
+        Action   = "iam:ListOpenIDConnectProviders"
         Resource = "*"
+      },
+      {
+        Sid      = "OidcProviderRead"
+        Effect   = "Allow"
+        Action   = "iam:GetOpenIDConnectProvider"
+        Resource = data.aws_iam_openid_connect_provider.github.arn
       },
       {
         Sid    = "GithubOidcRoleRead"

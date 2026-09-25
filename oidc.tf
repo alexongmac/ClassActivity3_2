@@ -79,6 +79,26 @@ resource "aws_iam_role_policy" "github_oidc_s3" {
           "arn:aws:s3:::sctp-tfstate-ce13",
           "arn:aws:s3:::sctp-tfstate-ce13/alex_s3/*"
         ]
+      },
+      {
+        Sid    = "OidcProviderRead"
+        Effect = "Allow"
+        Action = [
+          "iam:ListOpenIDConnectProviders",
+          "iam:GetOpenIDConnectProvider"
+        ]
+        # These actions do not support resource-level restriction to a single provider.
+        Resource = "*"
+      },
+      {
+        Sid    = "GithubOidcRoleRead"
+        Effect = "Allow"
+        Action = [
+          "iam:GetRole",
+          "iam:GetRolePolicy",
+          "iam:ListRolePolicies"
+        ]
+        Resource = "arn:aws:iam::*:role/alex-32-github-oidc-role"
       }
     ]
   })

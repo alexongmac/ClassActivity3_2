@@ -21,7 +21,10 @@ resource "aws_iam_role" "github_oidc" {
           }
           StringLike = {
             # Allow workflow runs triggered by pull_request events on this repo only.
-            "token.actions.githubusercontent.com:sub" = "repo:alexongmac/ClassActivity3_2:pull_request"
+            # GitHub sometimes appends immutable numeric IDs to the owner/repo
+            # (e.g. "repo:alexongmac@54748360/ClassActivity3_2@1383224553:pull_request"),
+            # so wildcard those segments instead of matching the plain names exactly.
+            "token.actions.githubusercontent.com:sub" = "repo:alexongmac*/ClassActivity3_2*:pull_request"
           }
         }
       }
